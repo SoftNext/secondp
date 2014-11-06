@@ -1,0 +1,3 @@
+Thu Nov  6 21:14:27 2014 [16801][-none-][FATAL] Could not connect to DB server 172.31.12.34 as root. port : Can't connect to MySQL server on '172.31.12.34' (110)
+Thu Nov  6 21:15:21 2014 [16851][-none-][FATAL] Could not connect to DB server 172.31.12.34 as root. port : Can't connect to MySQL server on '172.31.12.34' (110)
+Thu Nov  6 21:16:01 2014 [16894][-none-][FATAL] Could not connect to DB server 172.31.12.34 as root. port : Can't connect to MySQL server on '172.31.12.34' (110)
