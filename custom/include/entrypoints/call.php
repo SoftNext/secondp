@@ -39,6 +39,7 @@ if ($result->num_rows == 0) {
 	} else {
 		$bean = New Lead();
 		$bean->phone_mobile = $phone;
+		$bean->assigned_user_id = $_SESSION['authenticated_user_id'];
 		$beanId = $bean->save();
 		$redirectUrl = 'index.php?module=Leads&action=EditView&record=' . $beanId;
 	}
