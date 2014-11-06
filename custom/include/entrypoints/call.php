@@ -30,8 +30,7 @@ $queryAccounts = "SELECT id FROM accounts a WHERE a.phone_office = '{$phone}'";
 $result = $db->query($queryAccounts);
 if ($result->num_rows == 0) {
 	//check in leads
-	//@todo - check for active leads
-	$queryLeads = "SELECT id FROM leads l WHERE l.phone_mobile = '{$phone}'";
+	$queryLeads = "SELECT id FROM leads l WHERE l.phone_mobile = '{$phone}' AND l.converted = 0";
 	$result = $db->query($queryLeads);
 	if ($result->num_rows > 0) {
 		$record = $db->fetchRow($result);
@@ -40,6 +39,7 @@ if ($result->num_rows == 0) {
 	} else {
 		$bean = New Lead();
 		$bean->phone_mobile = $phone;
+		$bean->assigned_user_id = $_SESSION['authenticated_user_id'];
 		$beanId = $bean->save();
 		$redirectUrl = 'index.php?module=Leads&action=EditView&record=' . $beanId;
 	}
@@ -50,6 +50,20 @@ if ($result->num_rows == 0) {
 	$redirectUrl = 'index.php?module=Accounts&action=DetailView&record=' . $beanId;
 	$type = 'a';
 }
-$_SESSION['mCallVars_' . $crtObjectId] = array('type' => $type, 'beanId' => $beanId, 'crtObjectId' => $crtObjectId, 'startTime' => $GLOBALS['timedate']->nowDb());
+
+//create a new call
+$call = New Call();
+$call->parent_id = $beanId;
+$call->parent_type = ($type == 'a') ? 'Accounts' : 'Leads';
+$call->status = 'Held';
+$call->assigned_user_id = $_SESSION['authenticated_user_id'];
+$call->name = 'Created through call - Ameyo';
+$call->date_start = $GLOBALS['timedate']->nowDb();
+$call->direction = $_REQUEST['campaignName'];
+$callId = $call->save();
+
+//@todo - campaign
+
+$_SESSION['mCallVars_' . $crtObjectId] = array('callId' => $callId);
 header('location:' . $redirectUrl);
 exit;

@@ -24,18 +24,12 @@ $crtObjectId = $_REQUEST['crtObjectId'];
 if (isset($_SESSION['mCallVars_' . $crtObjectId])) {
 	$vars = $_SESSION['mCallVars_' . $crtObjectId];
 	
-	//create a new call
 	$call = New Call();
-	$call->parent_id = $vars['beanId'];
-	$call->parent_type = ($vars['type'] == 'a') ? 'Accounts' : 'Leads';
-	$call->status = 'Held';
-	$call->assigned_user_id = $_SESSION['authenticated_user_id'];
-	$call->name = 'Created through dispose';
-	$call->date_start = $vars['startTime'];
-	$calTime = calculateHoursMin($vars['startTime']);
+	$call->retrieve($vars['callId']);
+	$calTime = calculateHoursMin($call->date_start);
 	$call->duration_hours = $calTime['hrs'];
 	$call->duration_minutes = $calTime['min'];
-	//@todo - campaign, start time, duration read only
+	
 	$beanId = $call->save();
 	unset($_SESSION['mCallVars_' . $crtObjectId]);
 	$redirectUrl = 'index.php?module=Calls&action=EditView&record=' . $beanId;
