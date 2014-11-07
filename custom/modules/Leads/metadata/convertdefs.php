@@ -63,6 +63,9 @@ $viewdefs['Accounts']['ConvertLead'] = array(
         		'memberid_c',
         		'account_type'
         	),
+        	array (
+        		'lead_source_c'
+        	),
             array (
                 'name',
                 'phone_office',
