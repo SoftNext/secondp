@@ -26,11 +26,11 @@ $crtObjectId = $_REQUEST['crtObjectId'];
 $type = '';
 $beanId = '';
 $db = DBManagerFactory::getInstance();
-$queryAccounts = "SELECT id FROM accounts a WHERE a.phone_office = '{$phone}'";
+$queryAccounts = "SELECT id FROM accounts a WHERE a.phone_office = '{$phone}' AND a.deleted = 0";
 $result = $db->query($queryAccounts);
 if ($result->num_rows == 0) {
 	//check in leads
-	$queryLeads = "SELECT id FROM leads l WHERE l.phone_mobile = '{$phone}' AND l.converted = 0";
+	$queryLeads = "SELECT id FROM leads l WHERE l.phone_mobile = '{$phone}' AND l.converted = 0 AND a.deleted = 0";
 	$result = $db->query($queryLeads);
 	if ($result->num_rows > 0) {
 		$record = $db->fetchRow($result);
@@ -51,19 +51,23 @@ if ($result->num_rows == 0) {
 	$type = 'a';
 }
 
+$customerId = $_REQUEST['customerId'];
+$callType = empty($customerId) ? 'Inbound' : 'Outbound';
+
 //create a new call
 $call = New Call();
-$call->parent_id = $beanId;
-$call->parent_type = ($type == 'a') ? 'Accounts' : 'Leads';
-$call->status = 'Held';
+$call->parent_id 		= $beanId;
+$call->parent_type 		= ($type == 'a') ? 'Accounts' : 'Leads';
+$call->status 			= 'Held';
 $call->assigned_user_id = $_SESSION['authenticated_user_id'];
-$call->name = 'Created through call - Ameyo';
-$call->date_start = $GLOBALS['timedate']->nowDb();
-$call->direction = $_REQUEST['campaignName'];
+$call->name 			= 'Created through call - Ameyo';
+$call->date_start 		= $GLOBALS['timedate']->nowDb();
+$call->ameyo_call_id_c 	= $_REQUEST['crtObjectId'];
+$call->direction 		= $callType;
 $callId = $call->save();
 
 //@todo - campaign
 
-$_SESSION['mCallVars_' . $crtObjectId] = array('callId' => $callId);
+//$_SESSION['mCallVars_' . $crtObjectId] = array('callId' => $callId);
 header('location:' . $redirectUrl);
 exit;
