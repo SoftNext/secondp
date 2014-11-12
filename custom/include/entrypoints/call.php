@@ -26,11 +26,12 @@ $crtObjectId = $_REQUEST['crtObjectId'];
 $type = '';
 $beanId = '';
 $db = DBManagerFactory::getInstance();
+$phone = substr($phone, -10);
 $queryAccounts = "SELECT id FROM accounts a WHERE a.phone_office = '{$phone}' AND a.deleted = 0";
 $result = $db->query($queryAccounts);
 if ($result->num_rows == 0) {
 	//check in leads
-	$queryLeads = "SELECT id FROM leads l WHERE l.phone_mobile = '{$phone}' AND l.converted = 0 AND a.deleted = 0";
+	$queryLeads = "SELECT id FROM leads l WHERE l.phone_mobile = '{$phone}' AND l.converted = 0 AND l.deleted = 0";
 	$result = $db->query($queryLeads);
 	if ($result->num_rows > 0) {
 		$record = $db->fetchRow($result);
