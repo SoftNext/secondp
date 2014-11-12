@@ -26,12 +26,14 @@ $crtObjectId = $_REQUEST['crtObjectId'];
 $type = '';
 $beanId = '';
 $db = DBManagerFactory::getInstance();
-$phone = '+91' . str_replace('+91', '', ltrim($phone, '0'));
-$queryAccounts = "SELECT id FROM accounts a WHERE a.phone_office = '{$phone}' AND a.deleted = 0";
+$phoneStripped = str_replace('+91', '', ltrim($phone, '0'));
+$phone = '+91' . $phoneStripped;
+$phoneZero = '0' . $phoneStripped;
+$queryAccounts = "SELECT id FROM accounts a WHERE (a.phone_office = '{$phone}' OR a.phone_office = '{$phoneStripped}' OR a.phone_office = '{$phoneZero}') AND a.deleted = 0";
 $result = $db->query($queryAccounts);
 if ($result->num_rows == 0) {
 	//check in leads
-	$queryLeads = "SELECT id FROM leads l WHERE l.phone_mobile = '{$phone}' AND l.converted = 0 AND l.deleted = 0";
+	$queryLeads = "SELECT id FROM leads l WHERE (l.phone_mobile = '{$phone}' OR l.phone_mobile = '{$phoneStripped}' OR l.phone_mobile = '{$phoneZero}') AND l.converted = 0 AND l.deleted = 0";
 	$result = $db->query($queryLeads);
 	if ($result->num_rows > 0) {
 		$record = $db->fetchRow($result);
