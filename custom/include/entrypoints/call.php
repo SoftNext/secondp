@@ -26,7 +26,7 @@ $crtObjectId = $_REQUEST['crtObjectId'];
 $type = '';
 $beanId = '';
 $db = DBManagerFactory::getInstance();
-$phone = substr($phone, -10);
+$phone = '+91' . str_replace('+91', '', ltrim($phone, '0'));
 $queryAccounts = "SELECT id FROM accounts a WHERE a.phone_office = '{$phone}' AND a.deleted = 0";
 $result = $db->query($queryAccounts);
 if ($result->num_rows == 0) {
