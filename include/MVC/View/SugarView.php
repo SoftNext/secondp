@@ -1272,7 +1272,7 @@ EOHTML;
     {
         global $sugar_version, $sugar_flavor, $server_unique_key, $current_language, $action;
 
-        $theTitle = "<div class='moduleTitle'>\n";
+        $theTitle = "<div align='center'><h1>" . $this->module . "</h1></div><div class='moduleTitle'>\n";
 
         $module = preg_replace("/ /","",$this->module);
 
